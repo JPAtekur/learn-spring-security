@@ -1,18 +1,25 @@
 package com.learn.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class AppUser {
+    @Id
     private String username;
     private String email;
     private String password;
+    private String role;
 
     public AppUser() {
 
     }
 
-    public AppUser(String username, String email, String password) {
+    public AppUser(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getUsername() {
@@ -37,5 +44,13 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -1,5 +1,7 @@
 package com.learn.config;
 
+import com.learn.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,12 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/home").hasRole("XYZ")
+                .antMatchers("/home").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -30,12 +35,13 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("nirob").password(this.passwordEncoder().encode("123")).roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("shakila").password(this.passwordEncoder().encode("456")).roles("XYZ");
+//        auth.inMemoryAuthentication().withUser("nirob").password(this.passwordEncoder().encode("123")).roles("ADMIN");
+//        auth.inMemoryAuthentication().withUser("shakila").password(this.passwordEncoder().encode("456")).roles("XYZ");
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder(){
 //        return NoOpPasswordEncoder.getInstance();
         return new BCryptPasswordEncoder(15);
     }
